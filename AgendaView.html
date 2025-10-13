@@ -1,0 +1,207 @@
+<!-- Vista de la agenda para el tatuador
+Autor: Rodrigo Pacheco Otero
+Versión 1.0 -->
+<html charset="UTF-8">
+
+<head>
+    <title>Tatuajes RTS</title>
+    <style>
+        /* Diseño general de la vista */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: url(https://media.istockphoto.com/id/1326643570/es/vector/patr%C3%B3n-monocromo-en-el-tema-del-tatuaje-para-el-negro.jpg?s=612x612&w=0&k=20&c=RJjJ9WhJgMAW6rhMig2iwR5drxBdS7v3jJ_1c1jU_6U=);
+        }
+
+        /* recuadro principal del calendario */
+        .contenedor_calendario {
+            text-align: center;
+        }
+
+        /* Tabla del calendario */
+        table {
+            border-collapse: collapse;
+            width: 1000px;
+            margin: auto;
+            background-color: white;
+        }
+
+        /*diseño del Encabezado y datos*/
+        th,
+        td {
+            border: 1px solid #ccc;
+            width: 14.2%;
+            height: 100px;
+            vertical-align: top;
+            padding: 10px;
+            position: relative;
+        }
+
+        th {
+            background-color: black;
+            color: white;
+        }
+
+        /*Dias en la tabla*/
+        .numero_dia {
+            font-weight: bold;
+        }
+
+        /*Dias agendados*/
+        .evento {
+            background-color: #f0f0f0;
+            border: 1px solid #aaa;
+            font-size: 12px;
+            padding: 2px 4px;
+            margin-top: 4px;
+            border-radius: 4px;
+        }
+
+        /*Barra de navegacion(flechas/mes/año)*/
+        .barra_navegacion {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: white;
+        }
+
+        /*Diseño del boton regresar*/
+        .btn_regresar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: white;
+            color: black;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /*Encabezado del mes y año*/
+        #mes_anio {
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor_calendario">
+        <div class="barra_navegacion">
+            <button class="btn_navegacion" onclick="mesAnterior()">←</button>
+            <span id="mes_anio"></span>
+            <button class="btn_navegacion" onclick="mesSiguiente()">→</button>
+        </div>
+
+        <table id="calendario">
+            <thead>
+                <tr>
+                    <th>Dom</th>
+                    <th>Lun</th>
+                    <th>Mar</th>
+                    <th>Mié</th>
+                    <th>Jue</th>
+                    <th>Vie</th>
+                    <th>Sáb</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo_calendario">
+                <!-- Generado por JavaScript -->
+            </tbody>
+        </table>
+        <button class="btn_regresar">Regresar</button>
+    </div>
+    <!--Scrip de prueba-->
+    <script>
+        const mes_anio = document.getElementById('mes_anio');
+        const cuerpo_calendario = document.getElementById('cuerpo_calendario');
+
+        const meses = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        let fecha_actual = new Date();
+
+        // Eventos por fecha específica
+        const eventos = {
+            "2025-08-11": [
+                { nombre: 'Juan', horario: '11-3' },
+                { nombre: 'Laura', horario: '4-6' }
+            ],
+            "2025-07-12": [
+                { nombre: 'Ali', horario: '2-6' }
+            ]
+        };
+
+        // Genera el calendario del mes/año actual
+        function generarCalendario(mes, anio) {
+            cuerpo_calendario.innerHTML = '';
+            const primer_dia = new Date(anio, mes, 1).getDay();
+            const dias_mes = new Date(anio, mes + 1, 0).getDate();
+
+            mes_anio.textContent = `${meses[mes]} ${anio}`;
+
+            let dia = 1;
+
+            for (let i = 0; i < 6; i++) {
+                const fila = document.createElement('tr');
+
+                for (let j = 0; j < 7; j++) {
+                    const celda = document.createElement('td');
+
+                    if (i === 0 && j < primer_dia) {
+                        celda.innerHTML = '';
+                    } else if (dia > dias_mes) {
+                        break;
+                    } else {
+                        celda.innerHTML = `<div class="numero_dia">${dia}</div>`;
+
+                        const clave_fecha = `${anio}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+
+                        if (eventos[clave_fecha]) {
+                            eventos[clave_fecha].forEach(evento => {
+                                const div = document.createElement('div');
+                                div.className = 'evento';
+                                div.textContent = `${evento.nombre} (${evento.horario})`;
+                                celda.appendChild(div);
+                            });
+                        }
+
+                        dia++;
+                    }
+
+                    fila.appendChild(celda);
+                }
+
+                cuerpo_calendario.appendChild(fila);
+
+                if (dia > dias_mes) break;
+            }
+        }
+
+        // Mostrar mes anterior
+        function mesAnterior() {
+            fecha_actual.setMonth(fecha_actual.getMonth() - 1);
+            generarCalendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+        }
+
+        // Mostrar mes siguiente
+        function mesSiguiente() {
+            fecha_actual.setMonth(fecha_actual.getMonth() + 1);
+            generarCalendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+        }
+
+        // Inicializar calendario al cargar la página
+        generarCalendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+    </script>
+</body>
+
+</html>

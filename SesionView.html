@@ -1,0 +1,113 @@
+<!--Vista donde los tatuadores inician sesion 
+@utor Rodrigo Pacheco Otero
+Version 1.0-->
+<html charset="UTF-8">
+
+<head>    
+    <title>Tatuajes RTS</title>
+    <style>
+        /*Eliminacion de margenes*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*Formato letra y posiciones*/
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /*Imagen*/
+        .fondo_cuadro {
+            width: 100vw;
+            height: 40vh;
+            background-image: url(https://www.grupobillingham.com/blog/wp-content/uploads/2022/12/planner-agenda-calendario.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        /*Texto cabecera*/
+        .Titulo {
+            padding: 30px;
+            text-align: center;
+        }
+
+        /*btn iniciar sesion*/
+        .Iniciar_sesion button{
+            bottom: 20px;
+            right: 30px;
+            background-color: white;
+            height: 35px;
+            width: 80px;
+            border-radius: 6px;
+            cursor: pointer;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        /*cabeceras y cuadros de lectura*/
+        .Ingresar_datos textarea{
+        width: 250px;
+        height: 50px;
+        font-size: 14px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        resize: none;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        }
+
+        /*btn regresar*/
+        .Regresar button{
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: white;
+        color: black;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        }
+
+
+
+        
+    </style>
+</head>
+
+<body>
+    <!--Agregar fondo no completo-->
+    <div class="fondo_cuadro"> </div>
+    <!--Encabezado-->
+    <div class="Titulo">
+        <h1>¿Perteneces a Tatuajes RTS?</h1>
+        <h2>Inicia sesion </h2>
+    </div>
+    <!--Peticion de datos para validar al usuario-->
+    <div class="Ingresar_datos">
+        <label for="CorreoL">Escribe tu correo:</label><br>
+        <textarea id="correo" placeholder="Ejemplo: abc@domin.com"></textarea>
+        </br>
+        <label for="Contraseña">Escribe tu Contraseña:</label><br>
+        <textarea id="Contraseña" placeholder="Escribe aqui..."></textarea>
+        </br>
+    </div>
+    <!--Agregar botones de ruta-->
+    <div class="Iniciar_sesion">
+        <button id="Btn_Iniciar_sesion">Iniciar sesion</button>
+    </div>
+
+    <div class="Regresar">
+        <button id="Btn_regresar_inicio">Regresar</button>
+    </div>
+</body>
+
+</html>

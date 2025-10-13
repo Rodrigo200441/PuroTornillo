@@ -1,0 +1,260 @@
+<!--Vista donde el tatuador puede mover las citas y cancelar dias
+@utor Rodrigo Pacheco Otero
+Version 1.0-->
+<html charset="UTF-8">
+
+<head>
+    <title>Tatuajes RTS</title>
+    <style>
+        /*Estilo general*/
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        /*Diseño general del calendario*/
+        .contenedor_calendario {
+            text-align: center;
+        }
+
+        /*Diseño de la tabla del calendario*/
+        table {
+            border-collapse: collapse;
+            width: 1000px;
+            background-color: white;
+        }
+
+        /*diseño del Encabezado y datos*/
+        th,
+        td {
+            border: 1px solid #ccc;
+            width: 14.2%;
+            height: 100px;
+            vertical-align: top;
+            padding: 10px;
+            position: relative;
+        }
+
+        th {
+            background-color: black;
+            color: white;
+        }
+
+        /*Dias en la tabla*/
+        .numero_dia {
+            font-weight: bold;
+        }
+
+        /*Dias agendados*/
+        .evento {
+            background-color: #ccc;
+            border: 1px solid #888;
+            font-size: 12px;
+            padding: 2px 4px;
+            margin-top: 4px;
+            border-radius: 4px;
+            cursor: move;
+        }
+
+        /*Barra de navegacion(flechas/mes/año)*/
+        .navegacion_calendario {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /*Dias en lo que no se podra agendar*/
+        .dia_bloqueado {
+            background-color: #ffdddd !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor_calendario">
+        <div class="navegacion_calendario">
+            <button onclick="mes_anterior()">←</button>
+            <span id="mes_ano"></span>
+            <button onclick="mes_siguiente()">→</button>
+        </div>
+
+        <table id="calendario">
+            <thead>
+                <tr>
+                    <th>Dom</th>
+                    <th>Lun</th>
+                    <th>Mar</th>
+                    <th>Mié</th>
+                    <th>Jue</th>
+                    <th>Vie</th>
+                    <th>Sáb</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo_calendario"></tbody>
+        </table>
+    </div>
+    <!--Scrip de prueba-->
+    <script>
+        const mes_ano = document.getElementById('mes_ano');
+        const cuerpo_calendario = document.getElementById('cuerpo_calendario');
+
+        // Nombres de meses en español
+        const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+        let fecha_actual = new Date();
+
+        // Eventos organizados por fecha (YYYY-MM-DD)
+        const eventos = {
+            "2025_08_11": [{ nombre: "Juan", horario: "11-3" }],
+            "2025_08_12": [{ nombre: "Ali", horario: "2-6" }]
+        };
+
+        // Días bloqueados para agendar (no disponibles)
+        const dias_bloqueados = ["2025_08_15", "2025_08_20"];
+
+        // Generar el calendario para un mes y año específicos
+        function generar_calendario(mes, ano) {
+            cuerpo_calendario.innerHTML = "";
+            const primer_dia = new Date(ano, mes, 1).getDay();
+            const dias_en_mes = new Date(ano, mes + 1, 0).getDate();
+
+            mes_ano.textContent = `${meses[mes]} ${ano}`;
+            let dia = 1;
+
+            for (let i = 0; i < 6; i++) {
+                const fila = document.createElement("tr");
+
+                for (let j = 0; j < 7; j++) {
+                    const celda = document.createElement("td");
+                    celda.ondrop = soltar;
+                    celda.ondragover = permitir_soltar;
+
+                    if (i === 0 && j < primer_dia) {
+                        celda.innerHTML = "";
+                    } else if (dia > dias_en_mes) {
+                        break;
+                    } else {
+                        const fecha = `${ano}_${String(mes + 1).padStart(2, '0')}_${String(dia).padStart(2, '0')}`;
+                        const dia_bloqueado = dias_bloqueados.includes(fecha);
+
+                        celda.setAttribute("data_fecha", fecha);
+                        celda.innerHTML = `<div class="numero_dia">${dia}</div>`;
+
+                        // Marcar día bloqueado si aplica
+                        if (dia_bloqueado) {
+                            celda.classList.add("dia_bloqueado");
+                        }
+                        // Agregar eventos que correspondan a la fecha
+                        else if (eventos[fecha]) {
+                            eventos[fecha].forEach((ev, idx) => {
+                                const div = document.createElement("div");
+                                div.className = "evento";
+                                div.textContent = `${ev.nombre} (${ev.horario})`;
+                                div.setAttribute("draggable", "true");
+                                div.setAttribute("data_indice", idx);
+                                div.setAttribute("data_fecha", fecha);
+                                div.ondragstart = arrastrar;
+                                celda.appendChild(div);
+                            });
+                        }
+
+                        dia++;
+                    }
+
+                    fila.appendChild(celda);
+                }
+
+                cuerpo_calendario.appendChild(fila);
+
+                if (dia > dias_en_mes) break;
+            }
+        }
+
+        // Permitir soltar elementos en la celda
+        function permitir_soltar(ev) {
+            ev.preventDefault();
+        }
+
+        // Guardar datos del elemento que se arrastra
+        function arrastrar(ev) {
+            ev.dataTransfer.setData("text", ev.target.outerHTML);
+            ev.dataTransfer.setData("from_fecha", ev.target.getAttribute("data_fecha"));
+            ev.dataTransfer.setData("indice", ev.target.getAttribute("data_indice"));
+        }
+
+        // Manejar cuando se suelta un evento sobre una celda
+        function soltar(ev) {
+            ev.preventDefault();
+
+            const html_evento = ev.dataTransfer.getData("text");
+            const fecha_origen = ev.dataTransfer.getData("from_fecha");
+            const indice_evento = ev.dataTransfer.getData("indice");
+            const fecha_destino = this.getAttribute("data_fecha");
+
+            // Validar que el día destino no esté bloqueado
+            if (dias_bloqueados.includes(fecha_destino)) {
+                alert("Este día está bloqueado y no se puede agendar.");
+                return;
+            }
+
+            // Eliminar visualmente el evento de la celda origen
+            const celda_origen = document.querySelector(`td[data_fecha="${fecha_origen}"]`);
+            const eventos_arrastrables = celda_origen.querySelectorAll('.evento');
+            if (eventos_arrastrables[indice_evento]) {
+                eventos_arrastrables[indice_evento].remove();
+            }
+
+            // Agregar evento a la celda destino
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html_evento, "text/html");
+            const evento_movido = doc.body.firstChild;
+            evento_movido.setAttribute("data_fecha", fecha_destino);
+            evento_movido.setAttribute("data_indice", eventos[fecha_destino]?.length || 0);
+            evento_movido.ondragstart = arrastrar;
+            this.appendChild(evento_movido);
+
+            // Actualizar estructura de datos del calendario
+            const evento_obj = eventos[fecha_origen].splice(indice_evento, 1)[0];
+            if (eventos[fecha_origen].length === 0) {
+                delete eventos[fecha_origen];
+            }
+            if (!eventos[fecha_destino]) eventos[fecha_destino] = [];
+            eventos[fecha_destino].push(evento_obj);
+
+            // Cambiar citas para la BD
+            /*
+            fetch('/guardar_evento', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ eventos })
+            });
+            */
+        }
+
+        // Navegar al mes anterior
+        function mes_anterior() {
+            fecha_actual.setMonth(fecha_actual.getMonth() - 1);
+            generar_calendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+        }
+
+        // Navegar al mes siguiente
+        function mes_siguiente() {
+            fecha_actual.setMonth(fecha_actual.getMonth() + 1);
+            generar_calendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+        }
+
+        // Inicializar calendario en la fecha actual
+        generar_calendario(fecha_actual.getMonth(), fecha_actual.getFullYear());
+
+    </script>
+</body>
+
+</html>

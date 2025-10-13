@@ -1,0 +1,250 @@
+<!--Vista donde el cliente agrega su nombre y seleeciona el dia y hora de la cita
+@utor Rodrigo Pacheco Otero
+Version 1.0-->
+<html charset="UTF-8">
+
+<head>
+    <title>Tatuajes RTS</title>
+    <style>
+    /*Estilo de objetos/*
+        /*Eliminar bordes*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*Letra*/
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+        }
+
+        /*Fondo*/
+        .fondo_cuadro {
+            width: 100%;
+            height: 100vh;
+            background-image: url(https://previews.123rf.com/images/bsd555/bsd5551505/bsd555150500114/40291719-tattoo-machines-and-ink-vector-seamless-pattern-black-and-white.jpg);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 80px;
+            color: white;
+            text-shadow: 5px 5px 10px blue;
+        }
+
+        /*nombre ig*/
+        textarea {
+            width: 250px;
+            height: 50px;
+            font-size: 14px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            resize: none;
+            margin-top: 10px;
+        }
+
+        /*Encabezado nombre ig*/
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /*Calendario*/
+        #Calendario {
+            margin-top: 40px;
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        /*Diseño de mes dinamico*/
+        #mes-actual {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-shadow: 3px 3px 5px blue;
+        }
+
+         /*Diseño de los dias 7 columnas*/
+        #Dias_del_mes {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+         
+        /*Diseño de cada dia del calendario*/
+        #Dias_del_mes div {
+            padding: 15px 0;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        /*Dia seleccionado*/
+        #Dias_del_mes div.activo {
+            background-color: rgba(0, 200, 255, 0.8);
+            box-shadow: 0 0 10px cyan;
+        }
+        /*Diseño del boton para agenda*/
+        .btn_Agendar {
+            margin-top: 6px;
+            padding: 10px 10px;
+            font-size: 12px;
+            background-color: white;
+            color: black;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+         .Dias {
+             display: flex;
+             justify-content: space-between;
+             gap: 5px;
+             margin-bottom: 10px;
+         }
+         .Dias div {
+             flex: 1;  
+             text-align: center;
+             font-weight: bold;
+         }
+    </style>
+</head>
+
+<body>
+    <!--Añadadir el fondo que contiene el resto de objetos-->
+    <div class="fondo_cuadro">
+        <label for="NombreIG">Escribe tu nombre de Instagram para agendarte:</label>
+        <textarea id="NombreIG" placeholder="Escribe aqui"></textarea>
+
+        <div id="Calendario">
+            <div id="mes_actual"></div>
+            <div class="Dias">
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
+                <div>Dom</div>
+            </div>
+            <div id="Dias_del_mes"></div>
+        </div>
+        <button class="btn_Agendar">Agendar</button>
+    </div>
+</body>
+<!-- Firebase App (core) -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+<script>
+ //firebase
+  const firebaseConfig = {
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_DOMINIO.firebaseapp.com",
+    projectId: "TU_PROJECT_ID",
+    storageBucket: "TU_PROJECT_ID.appspot.com",
+    messagingSenderId: "XXXXXXXXXX",
+    appId: "APP_ID"
+  };
+
+  // Inicializar
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const diasContenedor = document.getElementById('Dias_del_mes');
+  const mesActualLabel = document.getElementById('mes_actual');
+  const btnAgendar = document.querySelector('.btn_Agendar');
+
+  let fechaSeleccionada = null;
+
+  const meses = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+
+  const hoy = new Date();
+  const año = hoy.getFullYear();
+  const mes = hoy.getMonth();
+  const primerDia = new Date(año, mes, 1).getDay();
+  const diasEnMes = new Date(año, mes + 1, 0).getDate();
+  const offset = primerDia === 0 ? 6 : primerDia - 1;
+
+  mesActualLabel.textContent = `${meses[mes]} ${año}`;
+
+  for (let i = 0; i < offset; i++) {
+    const espacio = document.createElement('div');
+    diasContenedor.appendChild(espacio);
+  }
+
+  for (let dia = 1; dia <= diasEnMes; dia++) {
+    const divDia = document.createElement('div');
+    divDia.textContent = dia;
+    divDia.addEventListener('click', () => {
+      document.querySelectorAll('#Dias_del_mes div').forEach(d => d.classList.remove('activo'));
+      divDia.classList.add('activo');
+      fechaSeleccionada = new Date(año, mes, dia);
+    });
+    diasContenedor.appendChild(divDia);
+  }
+
+  const selectHora = document.createElement('select');
+  selectHora.className = 'selectHora';
+  selectHora.style.marginTop = '10px';
+  selectHora.style.padding = '8px';
+  selectHora.style.borderRadius = '6px';
+
+  for (let h = 11; h <= 20; h++) {
+    const hora = `${h}:00`;
+    const option = document.createElement('option');
+    option.value = hora;
+    option.textContent = hora;
+    selectHora.appendChild(option);
+  }
+
+  document.querySelector('.fondo_cuadro').appendChild(selectHora);
+
+  btnAgendar.addEventListener('click', async () => {
+    const nombreIG = document.getElementById('NombreIG').value.trim();
+    const horaSeleccionada = selectHora.value;
+
+    if (!nombreIG || !fechaSeleccionada) {
+      alert('Por favor, escribe tu nombre de Instagram y selecciona un día.');
+      return;
+    }
+
+    const dia = fechaSeleccionada.getDate();
+    const mesTexto = meses[fechaSeleccionada.getMonth()];
+    const añoTexto = fechaSeleccionada.getFullYear();
+
+    const cita = {
+      nombreIG: nombreIG,
+      dia: dia,
+      mes: mesTexto,
+      año: añoTexto,
+      hora: horaSeleccionada,
+      timestamp: firebase.firestore.Timestamp.fromDate(new Date())
+    };
+
+    try {
+      await db.collection('citas').add(cita);
+      alert(`Agendado:\n@${nombreIG}\n️ ${dia} de ${mesTexto} ${añoTexto}\n ${horaSeleccionada}`);
+      document.getElementById('NombreIG').value = "";
+    } catch (error) {
+      alert('error al guardar en Firestore');
+      console.error(error);
+    }
+  });
+</script>
+
+
+</html>

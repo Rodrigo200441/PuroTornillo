@@ -1,0 +1,98 @@
+<!--Pagina principal del sistema, donde los clientes inician el proceso de agenda y los tatuadores pueden ingresar al sistema
+@utor Rodrigo Pacheco Otero
+Version 1.0-->
+<html charset="UTF-8">
+
+<head>
+    <title>Tatuajes RTS</title>
+    <style>
+        /*Eliminacion de margenes*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*Formato letra y posiciones*/
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c2c2c;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /*Imagen*/
+        .fondo_cuadro {
+            width: 100vw;
+            height: 40vh;
+            background-image: url(https://www.grupobillingham.com/blog/wp-content/uploads/2022/12/planner-agenda-calendario.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        /*Texto cabecera*/
+        .Titulo {
+            padding: 30px;
+        }
+
+        /*Descripción tatuaje*/
+        .Descripcion_tatuaje textarea {
+            width: 800px;
+            height: 180px;
+            font-size: 14px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            resize: none;
+
+        }
+
+        /*Boton sig*/
+        .Descripcion_tatuaje button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border: none;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            display: block;
+            margin: 20px auto 0 auto;
+        }
+
+        /*btn iniciar sesion*/
+        .Iniciar_sesion button{
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background-color: white;
+            height: 35px;
+            width: 80px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fondo_cuadro"> </div>
+
+    <div class="Titulo">
+        <h1>Tatuajes RTS</h1>
+        <h2>Lista de espera </h2>
+    </div>
+
+    <div class="Descripcion_tatuaje">
+        <label for="Descrpción">Describe tu tatuaje</label><br>
+        <textarea id="descripcion" placeholder="Escribe aqui..."></textarea>
+        </br>
+        <button id="Pasar_iniciar_sesion">Siguiente</button>
+    </div>
+
+    <div class="Iniciar_sesion">
+        <button id="Btn_Iniciar_sesion"> Iniciar sesion</button>
+    </div>
+</body>
+
+</html>

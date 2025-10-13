@@ -1,0 +1,194 @@
+<!--Vista despues de que el tatuador inicia sesion, seleccciona entre inventario y agenda
+@uto Rodrigo Pacheco Otero
+Version 1.0-->
+<html charset="UTF-8">
+
+<head>
+    <title>Tatuajes RTS</title>
+    <style>
+        /*Eliminar bordes*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /*Imagen de fondo*/
+        .Fondo {
+            width: 100%;
+            height: 100vh;
+            background-image: url(https://previews.123rf.com/images/bsd555/bsd5551505/bsd555150500114/40291719-tattoo-machines-and-ink-vector-seamless-pattern-black-and-white.jpg);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 80px;
+            color: white;
+            text-shadow: 5px 5px 10px blue;
+        }
+
+        /*Boton de agenda*/
+
+        #Inventario {
+            background-image: url(https://quickbooks.intuit.com/oidam/intuit/sbseg/en_row/blog/images/07/sbseg-en_row-blog-budget-excel-template-icon.png);
+        }
+
+        #Agenda {
+            background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuKmnZOStwu0o-k3kbKzCac3bOf4x7ovIDPQ&s);
+        }
+
+        /*Diseño general de botones*/
+        .botones {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 200px;
+        }
+
+        /*Diseño del texto que acompaña los botones*/
+        .boton_texto {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /*Ajuste de texto*/
+        .boton_texto p {
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px blue;
+        }
+
+        /*Ajuste de fondo*/
+        .boton {
+            width: 200px;
+            height: 200px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        /*Boton regreso diseño*/
+        #Regresar {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background-color: white;
+            color: black;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /*Diseño de ventana flotante*/
+        /*Ventana*/
+        .Ventana_seleccionar {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /*Diseño de los botones dentro de la clase opciones_agenda*/
+        .opciones_agenda {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            color: black;
+            width: 300px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /*Acomodo de botones*/
+        .botones_ventana {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        /*Diseño de los botones*/
+        .botones_ventana button {
+            padding: 10px;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /*Diseño del boton cerrar de la ventana*/
+        .cerrar {
+            background-color: crimson;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!--Creacion de objetos Fondo que contiene el resto de botones-->
+    <div class="Fondo">
+        <h2>Bienvenido, selecciona alguna de las opciones</h2>
+
+        <div class="botones">
+            <div class="boton_texto">
+                <button class="boton" id="Inventario"></button>
+                <p>Inventario</p>
+            </div>
+
+            <div class="boton_texto">
+                <button class="boton" id="Agenda"></button>
+                <p>Agenda</p>
+            </div>
+        </div>
+        <button id="Regresar">Regresar</button>
+    </div>
+    <!--Creacion de la ventana flotante-->
+    <div class="Ventana_seleccionar" id="ventanaAgenda">
+        <div class="opciones_agenda">
+            <h3>Selecciona una opcion</h3>
+            <div class="Botones_ventana">
+                <button>Revisar</button>
+                <button>Observar</button>
+            </div>
+            <button class="cerrar" id="cerrarAgenda">Cerrar</button>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+<!--Parte del scrip para probar la ventana(Quitar)-->
+<script>
+    const botonAgenda = document.getElementById("Agenda");
+    const ventanaAgenda = document.getElementById("ventanaAgenda");
+    const cerrarAgenda = document.getElementById("cerrarAgenda");
+
+    botonAgenda.addEventListener("click", () => {
+        ventanaAgenda.style.display = "flex";
+    });
+
+    cerrarAgenda.addEventListener("click", () => {
+        ventanaAgenda.style.display = "none";
+    });
+</script>
+</html>
