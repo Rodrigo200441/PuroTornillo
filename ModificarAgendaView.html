@@ -59,6 +59,19 @@ Version 1.0-->
             cursor: move;
         }
 
+        /*Diseño del boton regresar*/
+        .btn_regresar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: black;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
         /*Barra de navegacion(flechas/mes/año)*/
         .navegacion_calendario {
             display: flex;
@@ -99,6 +112,7 @@ Version 1.0-->
             </thead>
             <tbody id="cuerpo_calendario"></tbody>
         </table>
+        <button class="btn_regresar" onclick="location.href= 'Principal_tatuador.html'">Regresar</button>
     </div>
     <!--Scrip de prueba-->
     <script>

@@ -79,15 +79,16 @@ Version 1.0-->
         /*Boton regreso diseño*/
         #Regresar {
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            bottom: 20px;
+            left: 20px;
             background-color: white;
             color: black;
-            padding: 10px 14px;
+            padding: 10px 30px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
         }
+    
 
         /*Diseño de ventana flotante*/
         /*Ventana*/
@@ -161,15 +162,15 @@ Version 1.0-->
                 <p>Agenda</p>
             </div>
         </div>
-        <button id="Regresar">Regresar</button>
+        <button id="Regresar" onclick="location.href= 'Pagina inicio.html'">Regresar</button>
     </div>
     <!--Creacion de la ventana flotante-->
     <div class="Ventana_seleccionar" id="ventanaAgenda">
         <div class="opciones_agenda">
             <h3>Selecciona una opcion</h3>
             <div class="Botones_ventana">
-                <button>Revisar</button>
-                <button>Observar</button>
+                <button onclick="location.href= 'ModificarAgendaView.html'">Modificar</button>
+                <button onclick="location.href= 'AgendaView.html'">Observar</button>
             </div>
             <button class="cerrar" id="cerrarAgenda">Cerrar</button>
         </div>
