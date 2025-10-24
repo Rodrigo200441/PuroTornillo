@@ -5,6 +5,8 @@ Version 1.0-->
 
 <head>
     <title>Tatuajes RTS</title>
+    <!--biblioteca de iconos Font Awesome para las redes sociales-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /*Eliminacion de margenes*/
         * {
@@ -72,6 +74,25 @@ Version 1.0-->
             border-radius: 6px;
             cursor: pointer;
         }
+        /*Redes sociales en la parte inferior izquierda */
+        .redes-sociales{
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .redes-sociales a{
+            display: inline-block;
+            margin-right: 10px;
+            text-decoration: none;
+            color: #000;
+            font-size: 50px;
+            transition: color 0.3 ease;
+        }
+        .redes-sociales a:hover{
+            color: #e91e63;
+        }
+        
     </style>
 </head>
 
@@ -93,7 +114,17 @@ Version 1.0-->
     <div class="Iniciar_sesion">
         <button id="Btn_Iniciar_sesion" onclick="location.href= 'SesionView.html'"> Iniciar sesion</button>
     </div>
+    <!---Iconos de redes sociales en la esquina inferior -->
+    <div class="redes-sociales">
+        <a href="https://www.instagram.com/olivaaaaaan/" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://www.facebook.com/share/19XPRcgdiH/" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-facebook"></i>
+        </a>
+    </div>
 </body>
 
 
 </html>
+
